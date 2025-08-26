@@ -52,22 +52,24 @@ if __name__ == "__main__":
 
     qa_data = parse_qa_file(file_content)
 
-    output_filename = "finetune_data.jsonl"
+    output_filename = "gemma3_finetune_data.jsonl"
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for item in qa_data:
-            instruction = item["question"]
-            input_text = "" # As per the example, input is empty for this task
+            user_content = item["question"]
             
             # Generate reasoning based on the answer
             reasoning = generate_reasoning(item["answer"])
             
             # Combine reasoning with the original answer for the final output
-            output_text = f"推理过程：\n{reasoning}\n\n答：{item['answer']}"
+            assistant_content = f"推理过程：\n{reasoning}\n\n答：{item['answer']}"
             
             fine_tune_entry = {
-                "instruction": instruction,
-                "input": input_text,
-                "output": output_text
+                "conversations": [
+                    {"role": "user", "content": user_content},
+                    {"role": "assistant", "content": assistant_content}
+                ],
+                "source": "jushe-qa-dataset", # Placeholder source
+                "score": 5.0 # Placeholder score
             }
             outfile.write(json.dumps(fine_tune_entry, ensure_ascii=False) + '\n')
 
