@@ -1,14 +1,6 @@
 import re
 import json
 
-def generate_reasoning(answer):
-    # Simple reasoning generation: break the answer into sentences or paragraphs.
-    # This can be made more sophisticated later if needed.
-    parts = [p.strip() for p in answer.split('\n') if p.strip()]
-    reasoning_steps = []
-    for i, part in enumerate(parts):
-        reasoning_steps.append(f"Step {i+1}: {part}")
-    return "\n".join(reasoning_steps)
 
 def parse_qa_file(file_content):
     qa_pairs = []
@@ -57,11 +49,8 @@ if __name__ == "__main__":
         for item in qa_data:
             user_content = item["question"]
             
-            # Generate reasoning based on the answer
-            reasoning = generate_reasoning(item["answer"])
-            
-            # Combine reasoning with the original answer for the final output
-            assistant_content = f"推理过程：\n{reasoning}\n\n答：{item['answer']}"
+            # Only include the answer for the final output
+            assistant_content = item['answer']
             
             fine_tune_entry = {
                 "conversations": [
