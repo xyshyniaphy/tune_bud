@@ -75,6 +75,24 @@ def parse_qa_file(file_content):
 
     return qa_pairs
 
+def generate_markdown_doc(qa_data, output_md_filename="fine_tune_qf.md"):
+    """
+    Generates a markdown file containing the Q&A pairs from the qa_data.
+    """
+    markdown_content = ["# QF Q&A Dataset for Fine-tuning\n"]
+
+    for i, item in enumerate(qa_data):
+        markdown_content.append(f"## Question {i+1}:")
+        markdown_content.append(f"**Q:** {item['question']}\n")
+        markdown_content.append(f"**A:** {item['answer']}\n")
+        markdown_content.append("---\n") # Separator for readability
+
+    with open(output_md_filename, 'w', encoding='utf-8') as md_file:
+        md_file.write('\n'.join(markdown_content))
+    
+    print(f"Successfully generated markdown documentation to {output_md_filename}", file=sys.stderr)
+
+
 if __name__ == "__main__":
     # Ensure the script is run with the correct Python environment.
     # This block handles reading the input file, cleaning, parsing, and writing the output.
@@ -122,3 +140,6 @@ if __name__ == "__main__":
         print("Warning: No Q&A pairs were processed. Check file format and parsing logic.", file=sys.stderr)
     else:
         print(f"Successfully generated {len(qa_data)} Q&A entries to {output_filename}", file=sys.stderr)
+    
+    # Generate the markdown documentation file
+    generate_markdown_doc(qa_data)
